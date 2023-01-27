@@ -59,10 +59,11 @@ class SyncPermissionRoute extends Command
         $model = config('permission.models.permission');
         $model = new $model;
         foreach ($routes as $route) {
-            $permission = $model->query()->where('name', $route['name'])->first();
+            $permission = $model->query()->where([['method', $route['method']], ['route', $route['route']]])->first();
             if ($permission) {
                 if ($permission->slug) {
                     unset($route['slug']);
+                    unset($route['name']);
                 }
                 $permission->update($route);
             } else {
